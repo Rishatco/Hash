@@ -2,36 +2,43 @@
 //
 #include <time.h>
 #include <iostream>
-using namespace std;
+//using namespace std;
 
 const int  N = 52;// количество данных в таблице
 const int M = 3;//размерность ключа
 const int T = 78;//размерность таблицы
+int hash[T];
 //вариант 64
+int sum_i;
+void add(int k) {
+    int f_k = (k + 49) % T;// вычисляем значение хеш-функции
+    int i = 0;//номер пробы
+
+    while (true) {
+        sum_i++;
+        if (hash[(f_k + i * i) % T] == 1e9 || hash[(f_k + i * i) % T] == k) {//если ячейка свободна или значение в ячейке равно значению вставляемого
+            hash[(f_k + i * i) % T] = k;
+            break;
+        }
+        i++;
+
+
+    }
+}
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
     srand(time(NULL));
-    int hash[T];
+   
+      sum_i = 0;
     //заполнение таблицы значениями, не удовлетворяющие размерности 
     for (int i = 0; i < T; i++)
         hash[i] = 1e9;
-    int sum_i = 0;
+  
     for (int j = 0; j < N; j++) {
         int k = rand()%900+100;// получаем рандомное число
-        int f_k = (k + 49) % T;// вычисляем значение хеш-функции
-        int i = 0;//номер пробы
-       
-         while (true) {
-             sum_i++;
-            if (hash[(f_k + i * i)%T] == 1e9 || hash[(f_k + i * i) % T] == k) {//если ячейка свободна или значение в ячейке равно значению вставляемого
-                hash[(f_k + i * i) % T] = k;
-                break;
-            }
-            i++;
-           
-         
-        }
+       // add()
     }
     //вывод хеш-таблицы
     for (int i = 0; i < T; i++)
@@ -39,8 +46,8 @@ int main()
         if (hash[i] == 1e9)printf("hash[%2d]= NaN\n",i);
         else printf("hash[%2d]= %3d\n",i, hash[i]);
     }
-    cout << "Процент заполнености таблицы равно " << (float)N / T * 100 << "%\n";
-    cout << "Среднее количество проб  необходимых для размещения элемента равно " << (float)sum_i/T<< "\n";
+    std::cout << "Процент заполнености таблицы равно " << (float)N / T * 100 << "%\n";
+    std:: cout << "Среднее количество проб  необходимых для размещения элемента равно " << (float)sum_i / T << "\n";
 
    
     return 0;
