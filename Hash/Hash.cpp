@@ -16,7 +16,28 @@ void add(int k) {
 
     while (true) {
         sum_i++;
-        if (hash[(f_k + i * i) % T] == 1e9 || hash[(f_k + i * i) % T] == k) {//если ячейка свободна или значение в ячейке равно значению вставляемого
+        if (hash[(f_k + i * i) % T] == 1e9) {//если ячейка свободна или значение в ячейке равно значению вставляемого
+            hash[(f_k + i * i) % T] = k;
+            break;
+        }
+        else if (hash[(f_k + i * i) % T] == k)
+        {
+            std::cout << "Элемент с таким кючом находиться в таблице по индексу: " << (f_k + i * i) % T << "\n";
+            break;
+        }
+        i++;
+
+
+    }
+}
+void add_rand() {
+    int k = rand() % 900 + 100;// получаем рандомное число
+    int f_k = (k + 49) % T;// вычисляем значение хеш-функции
+    int i = 0;//номер пробы
+
+    while (true) {
+        sum_i++;
+        if (hash[(f_k + i * i) % T] == 0 || hash[(f_k + i * i) % T] == k) {//если ячейка свободна или значение в ячейке равно значению вставляемого
             hash[(f_k + i * i) % T] = k;
             break;
         }
@@ -24,6 +45,39 @@ void add(int k) {
 
 
     }
+}
+void del(int k) {
+        int f_k = (k + 49) % T;// вычисляем значение хеш-функции
+        int i = 0;//номер пробы
+
+        while (true) {
+            
+            
+            if (hash[(f_k + i * i) % T] == k || hash[(f_k + i * i) % T] == 0)
+            {
+                std::cout << "Элемент с таким кючом удален из таблицы: " <<"\n";
+                break;
+            }
+          
+            i++;
+
+
+        }
+    }
+void print() {
+    for (int i = 0; i < T / 2; i++)
+    {
+
+        printf("hash[%2d]= %3d     hash[%2d]= %3d", i, hash[i], i + T / 2, hash[T / 2 + i]);
+    }
+}
+void change(int prev, int now) {
+    del(prev);
+    add(now);
+}
+void stat() {
+    std::cout << "Процент заполнености таблицы равно " << (float)N / T * 100 << "%\n";
+    std::cout << "Среднее количество проб  необходимых для размещения элемента равно " << (float)sum_i / T << "\n";
 }
 
 int main()
@@ -34,20 +88,64 @@ int main()
       sum_i = 0;
     //заполнение таблицы значениями, не удовлетворяющие размерности 
     for (int i = 0; i < T; i++)
-        hash[i] = 1e9;
+        hash[i] =0;
   
     for (int j = 0; j < N; j++) {
         int k = rand()%900+100;// получаем рандомное число
-       // add()
+        int f_k = (k + 49) % T;// вычисляем значение хеш-функции
+        int i = 0;//номер пробы
+
+        while (true) {
+            sum_i++;
+            if (hash[(f_k + i * i) % T] == 0 || hash[(f_k + i * i) % T] == k) {//если ячейка свободна или значение в ячейке равно значению вставляемого
+                hash[(f_k + i * i) % T] = k;
+                break;
+            }
+            i++;
+
+
+        }
     }
-    //вывод хеш-таблицы
-    for (int i = 0; i < T; i++)
-    {
-        if (hash[i] == 1e9)printf("hash[%2d]= NaN\n",i);
-        else printf("hash[%2d]= %3d\n",i, hash[i]);
+    int c=0;
+    while (c!=7) {
+        std::cout << "1. Добавить введенное число в таблицу\n2. Добавить случайное число в таблицу\n3. Удалить число из таблицы\n4. Вывести таблицу\n5. Поменять число в таблице\n6. Вывести статистику\n";
+
+       std:: cin >> c;
+        switch (c)
+        {
+        case 1:
+            std::cout << "\n";
+            int a;
+            std::cin >> a;
+            add(a);
+            break;
+        case 2:
+            add_rand();
+            break;
+        case 3: 
+            std::cout << "\n";
+            int a;
+            std::cin >> a;
+            del (a);
+            break;
+        case 4:
+            print();
+            break;
+        case 5:
+            std::cout << "\n";
+            int a, b;
+            std::cin >> a >> b;
+            change(a, b);
+            break;
+        case 6:
+            stat();
+            break;
+       
+        }
+    
     }
-    std::cout << "Процент заполнености таблицы равно " << (float)N / T * 100 << "%\n";
-    std:: cout << "Среднее количество проб  необходимых для размещения элемента равно " << (float)sum_i / T << "\n";
+    
+   
 
    
     return 0;
