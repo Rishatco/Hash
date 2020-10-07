@@ -4,7 +4,7 @@
 #include <iostream>
 //using namespace std;
 
-const int  N = 52;// количество данных в таблице
+ int  N = 52;// количество данных в таблице
 const int M = 3;//размерность ключа
 const int T = 78;//размерность таблицы
 int hash[T];
@@ -13,10 +13,25 @@ int sum_i;
 void add(int k) {
     int f_k = (k + 49) % T;// вычисляем значение хеш-функции
     int i = 0;//номер пробы
-
+    bool flag = true;
+    while (true) {
+        if (hash[(f_k + i * i) % T] == k) {
+            std::cout << "Элемент с таким кючом находиться в таблице по индексу: " << (f_k + i * i) % T << "\n";
+            flag = false;
+            break;
+        }
+        if (hash[(f_k + i * i) % T] == 0){
+            
+            break;
+        }
+            
+        i++;
+    }
+     i = 0;
+     if(flag)
     while (true) {
         sum_i++;
-        if (hash[(f_k + i * i) % T] == 1e9) {//если ячейка свободна или значение в ячейке равно значению вставляемого
+        if (hash[(f_k + i * i) % T] == 0|| hash[(f_k + i * i) % T] == -1) {//если ячейка свободна или значение в ячейке равно значению вставляемого
             hash[(f_k + i * i) % T] = k;
             break;
         }
@@ -29,6 +44,7 @@ void add(int k) {
 
 
     }
+    N++;
 }
 void add_rand() {
     int k = rand() % 900 + 100;// получаем рандомное число
@@ -37,38 +53,51 @@ void add_rand() {
 
     while (true) {
         sum_i++;
-        if (hash[(f_k + i * i) % T] == 0 || hash[(f_k + i * i) % T] == k) {//если ячейка свободна или значение в ячейке равно значению вставляемого
+        if (hash[(f_k + i * i) % T] == 0 ||  hash[(f_k + i * i) % T] == -1) {//если ячейка свободна или значение в ячейке равно значению вставляемого
             hash[(f_k + i * i) % T] = k;
+            break;
+        }
+        else if (hash[(f_k + i * i) % T] == k)
+        {
+            std::cout << "Элемент с таким кючом находиться в таблице по индексу: " << (f_k + i * i) % T << "\n";
             break;
         }
         i++;
 
 
     }
+    N++;
 }
 void del(int k) {
         int f_k = (k + 49) % T;// вычисляем значение хеш-функции
         int i = 0;//номер пробы
-
+      
+        
+     
         while (true) {
             
-            
-            if (hash[(f_k + i * i) % T] == k || hash[(f_k + i * i) % T] == 0)
+            sum_i++;
+            if (hash[(f_k + i * i) % T] == k || hash[(f_k + i * i) % T] ==0)
             {
-                std::cout << "Элемент с таким кючом удален из таблицы: " <<"\n";
+               if(hash[(f_k + i * i) % T] == k)
+                hash[(f_k + i * i) % T] =-1;
+               
+                std::cout << "Элемент с таким кючом удален из таблицы" <<"\n";
                 break;
             }
+            
           
             i++;
 
 
         }
+        N--;
     }
 void print() {
-    for (int i = 0; i < T / 2; i++)
+    for (int i = 0; i < T / 6; i++)
     {
 
-        printf("hash[%2d]= %3d     hash[%2d]= %3d", i, hash[i], i + T / 2, hash[T / 2 + i]);
+        printf("hash[%2d]= %3d\thash[%2d]= %3d\thash[%2d]= %3d\thash[%2d]= %3d\thash[%2d]= %3d\thash[%2d]= %3d\n", i, hash[i], i + T /6, hash[T / 6 + i], i + T / 3, hash[T /3 + i], i + T / 2, hash[T / 2 + i], i + T*2 /3, hash[T*2 / 3 + i], i + T *5/ 6, hash[T*5 / 6 + i]);
     }
 }
 void change(int prev, int now) {
@@ -77,7 +106,7 @@ void change(int prev, int now) {
 }
 void stat() {
     std::cout << "Процент заполнености таблицы равно " << (float)N / T * 100 << "%\n";
-    std::cout << "Среднее количество проб  необходимых для размещения элемента равно " << (float)sum_i / T << "\n";
+    std::cout << "Среднее количество проб  необходимых для размещения элемента равно " << (float)sum_i / N << "\n";
 }
 
 int main()
@@ -114,7 +143,7 @@ int main()
         switch (c)
         {
         case 1:
-            std::cout << "\n";
+            std::cout << "Введите число для вставки\n";
             int a;
             std::cin >> a;
             add(a);
@@ -123,19 +152,19 @@ int main()
             add_rand();
             break;
         case 3: 
-            std::cout << "\n";
-            int a;
-            std::cin >> a;
-            del (a);
+            std::cout << "Введите число, которое нужно удалить\n";
+            int b;
+            std::cin >> b;
+            del (b);
             break;
         case 4:
             print();
             break;
         case 5:
-            std::cout << "\n";
-            int a, b;
-            std::cin >> a >> b;
-            change(a, b);
+            std::cout << "Введите число, которое нужно заменить, и число, на которое заменяем\n";
+            int c, d;
+            std::cin >> c >> d;
+            change(c,d);
             break;
         case 6:
             stat();
